@@ -1,10 +1,19 @@
 window.onload = () => {
   const searchResultEl = document.querySelector("#search-results");
   const searchParams = new URLSearchParams(window.location.search);
+  const spotifyEmbed = new SpotifyEmbed({
+    parentEl: document.querySelector("#spotify-embed"),
+  });
   const songSearch = searchParams.get("song");
   if (songSearch) {
     fetchSongSearch();
   }
+
+  searchResultEl.addEventListener("click", (e) => {
+    if (e.target.matches(".btn-listen")) {
+      return spotifyEmbed.src(e.target.value);
+    }
+  });
 
   async function fetchSongSearch() {
     try {
@@ -26,7 +35,21 @@ window.onload = () => {
       const albumText = album.name;
       const artistText = artists.map((a) => a.name).join(", ");
       const spotifyUrl = external_urls.spotify;
-      const songDetails = [
+
+      const el = document.createElement("div");
+      el.classList.add("mb-3");
+      el.innerHTML = `
+        <h3>${name}</h3>
+        <p>${songDetails({ uri, artistText, albumText, spotifyUrl })}</p>
+        <button class="btn btn-secondary btn-listen" value="${spotifyEmbedUrl(
+          uri
+        )}">Listen</button>
+      `;
+      searchResultEl.appendChild(el);
+    });
+
+    function songDetails({ uri, artistText, albumText, spotifyUrl }) {
+      return [
         ["uri", uri],
         ["artist", artistText],
         ["album", albumText],
@@ -34,12 +57,11 @@ window.onload = () => {
       ]
         .map((row) => row.join(": "))
         .join("<br>");
-      const el = document.createElement("div");
-      el.innerHTML = `
-        <h3>${name}</h3>
-        <p>${songDetails}</p>
-      `;
-      searchResultEl.appendChild(el);
-    });
+    }
+
+    function spotifyEmbedUrl(songUri) {
+      const [type, id] = songUri.split(":").slice(1);
+      return `https://open.spotify.com/embed/${type}/${id}`;
+    }
   }
 };
