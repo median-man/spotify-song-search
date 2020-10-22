@@ -1,0 +1,21 @@
+{
+  "name": "spotify-search-example",
+  "version": "1.0.0",
+  "description": "Example usage of the Spotify API to enable users to search for song info.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "John Desrosiers <john.desro@gmail.com> (https://github.com/median-man)",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
